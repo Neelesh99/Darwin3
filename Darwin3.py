@@ -1,26 +1,4 @@
-# -*- coding: latin-1 -*-
-#
-#       Darwin3.py
-#
-#  Copyright 2020 Neelesh Ravichandran <neelesh.ravichandran1999@gmail.com>
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#  MA 02110-1301, USA.
-#
-
-# Backend Start
+# Backend
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
 from keras.utils import np_utils
@@ -95,7 +73,7 @@ drop_min_max = {
 # Mutation Rate #
 MUTATIONRATE = 0.1
 # Epoch count
-EPOCHS = 10
+EPOCHS = 5
 # Network Mode
 CLASSIFICATION = 0
 REGRESSION = 1
@@ -335,6 +313,8 @@ class FusionEngine:
         return float(x)
 
     def get_next(self, Genes, pointer, Type):
+        if (len(Genes) == 0):
+            return (None, -1)
         if pointer == -1:
             return (Genes[0], -1)
         while pointer < len(Genes):
@@ -463,7 +443,9 @@ class FusionEngine:
         bottom_dense_pointer = 0
         bottom_drop_pointer = 0
         ChildChromosomePrototype = []
-        End = False
+        End = True
+        if len(Cortex1 != 0):
+            End = False
         while not End:
             Gene1 = Cortex1[top_pointer]
             t1 = Gene1.get_type()
@@ -693,9 +675,6 @@ class Translator:
         Output_list = [Occular, Cortex]
         return Output_list
 
-# =============== End of Backend =================== #
-# =============== Front end Begin ==================#
-
 #Engine
 #Genetic Engine
 class Genetic_Engine:
@@ -791,6 +770,13 @@ class Genetic_Engine:
         print("Darwin2 engine run, final evaluated test score = {}".format(FitnessScores[0][1]))
         print("Winning Architecture: ")
         print(Arch)
+        print("With Score: ")
+        print(FitnessScores[0][1])
+        for i in range(1, len(FitnessScores)):
+          ARR = Z.untranslate(FitnessScores[i][2])
+          print ("Architecture in {} place: ".format(i+1))
+          print("With Score: ")
+          print(FitnessScores[i][1])
         return FitnessScores[0][0]
     def getPlainGeneration(self):
         FinalList = []
@@ -798,5 +784,3 @@ class Genetic_Engine:
             Z = Translator(self.Mode)
             FinalList.append(Z.untranslate(i))
         return FinalList
-
-# =========== End of Darwin Engine ===================== #
